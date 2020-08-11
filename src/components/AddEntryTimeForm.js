@@ -1,47 +1,51 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import firebase from '../firebase'
 
+
 const AddEntryTimeForm = () => {
-  const [title, setTitle] = useState('');
-  const [time, setTime] = useState('');
+  const [title, setTitle] = useState('')
+  const [time, setTime] = useState('')
 
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    await firebase 
-    .firestore()
-    .collection('times')
-    .add({
-      title,
-      time_seconds: parseInt(time)
-    })
+    await firebase
+      .firestore()
+      .collection('times')
+      .add({
+        title,
+        time_seconds: parseInt(time, 10),
+      })
 
     setTime('')
     setTitle('')
-
   }
   return (
     <form onSubmit={onSubmit}>
       <h2>Add time entry</h2>
       <>
-        <label>Title</label>
+        <label htmlFor="title">Title</label>
         <input
-          type="test"
+          name="title"
+          id="title"
+          type="text"
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
       </>
       <>
-        <label>Time</label>
+        <label htmlFor="time">Time</label>
         <input
+          name="time"
+          id="time"
           type="number"
           value={time}
           onChange={(e) => setTime(e.currentTarget.value)}
         />
       </>
-      <button>Ad time entry</button>
+      <button type="submit">Ad time entry</button>
     </form>
-  );
-};
+  )
+}
 
-export default AddEntryTimeForm;
+export default AddEntryTimeForm

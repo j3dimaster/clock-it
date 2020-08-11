@@ -1,56 +1,61 @@
-import React, { useState, useEffect } from "react";
-import firebase from "../firebase";
+import React, { useState, useEffect } from 'react'
+import firebase from '../firebase'
 
 const SORT_OPTIONS = {
   TIME_ASC: {
-    colum: "time_seconds",
-    direction: "asc",
+    colum: 'time_seconds',
+    direction: 'asc',
   },
   TIME_DESC: {
-    colum: "time_seconds",
-    direction: "desc",
+    colum: 'time_seconds',
+    direction: 'desc',
   },
   TITLE_ASC: {
-    colum: "title",
-    direction: "asc",
-  }, 
-  TITLE_DESC: {
-    colum: "title",
-    direction: "desc",
+    colum: 'title',
+    direction: 'asc',
   },
-};
+  TITLE_DESC: {
+    colum: 'title',
+    direction: 'desc',
+  },
+}
 
-function useTimes(sortBy = "TIME_ASC") {
-  const [times, setTimes] = useState([]);
+function useTimes(sortBy = 'TIME_ASC') {
+  const [times, setTimes] = useState([])
 
   useEffect(() => {
     const unsubscribe = firebase
       .firestore()
-      .collection("times")
+      .collection('times')
       .orderBy(SORT_OPTIONS[sortBy].colum, SORT_OPTIONS[sortBy].direction)
       .onSnapshot((snapshot) => {
         const newTimes = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
-        setTimes(newTimes);
-      });
-    return () => unsubscribe(); // drop websocket connection
-  }, [sortBy]);
+        }))
+        setTimes(newTimes)
+      })
+    return () => unsubscribe() // drop websocket connection
+  }, [sortBy])
 
-  return times;
+  return times
 }
 
 const Timeslist = () => {
-  const [sortBy, setSortBy] = useState("TIME_ASC");
-  const times = useTimes(sortBy);
+  const [sortBy, setSortBy] = useState('TIME_ASC')
+  const times = useTimes(sortBy)
 
   return (
     <>
       <h2>Times list</h2>
       <>
-        <label>Sort by</label>
-        <select value={sortBy} onChange={(e) => setSortBy(e.currentTarget.value)}>
+        <label htmlFor="timeSort">Sort by</label>
+        <select
+          name="timeSort"
+          id="timeSort"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.currentTarget.value)}
+        >
           <option value="TIME_ASC">Time(fastest first</option>
           <option value="TIME_DESC">Time(slowest first</option>
           <option disabled>---</option>
@@ -69,7 +74,7 @@ const Timeslist = () => {
         ))}
       </ol>
     </>
-  );
-};
+  )
+}
 
-export default Timeslist;
+export default Timeslist
